@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -11,7 +12,6 @@ const io = new Server(server, {
     methods: ['GET', 'POST']
   }
 });
-
 
 app.use(express.json());
 
@@ -26,9 +26,9 @@ const stockRoutes = require('./routes/stock');
 app.use('/purchase', purchaseRoutes);
 app.use('/stock', stockRoutes);
 
-// Serve static frontends if needed (optional)
-// app.use('/purchase-ui', express.static('frontend-purchase'));
-// app.use('/view-ui', express.static('frontend-view'));
+// Serve static frontends
+app.use('/purchase-ui', express.static(path.join(__dirname, '../frontend-purchase')));
+app.use('/view-ui', express.static(path.join(__dirname, '../frontend-view')));
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
