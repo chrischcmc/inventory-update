@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>View Stock</title>
+</head>
+<body>
+  <h1>Stock Balance</h1>
+  <p id="stock"></p>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    socket.on('stockUpdate', (balance) => {
+      document.getElementById('stock').innerText = balance;
+    });
+
+    // Initial fetch
+    fetch('/stock')
+      .then(res => res.json())
+      .then(data => document.getElementById('stock').innerText = data.balance);
+  </script>
+</body>
+</html>

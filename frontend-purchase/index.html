@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Purchase Item</title>
+</head>
+<body>
+  <h1>Purchase Shoes</h1>
+  <input type="number" id="qty" placeholder="Quantity">
+  <button onclick="purchase()">Buy</button>
+  <p id="msg"></p>
+
+  <script>
+    async function purchase() {
+      const qty = document.getElementById('qty').value;
+      const res = await fetch('/purchase', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity: parseInt(qty) })
+      });
+      const data = await res.json();
+      document.getElementById('msg').innerText = 
+        data.success ? `Purchase successful. Balance: ${data.balance}` : data.error;
+    }
+  </script>
+</body>
+</html>
