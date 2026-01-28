@@ -1,23 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>View Stock</title>
+  <meta charset="UTF-8">
+  <title>Inventory View</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Stock Balance</h1>
-  <p id="stock"></p>
+  <h1>Inventory Balance</h1>
+  <p>Current Stock: <span id="balance">Loading...</span></p>
 
+  <button onclick="purchaseItem(1)">Buy 1</button>
+  <button onclick="purchaseItem(2)">Buy 2</button>
+
+  <!-- Load Socket.IO client from backend -->
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
-    socket.on('stockUpdate', (balance) => {
-      document.getElementById('stock').innerText = balance;
-    });
-
-    // Initial fetch
-    fetch('/stock')
-      .then(res => res.json())
-      .then(data => document.getElementById('stock').innerText = data.balance);
-  </script>
+  <!-- Your frontend logic -->
+  <script src="script.js"></script>
 </body>
 </html>
