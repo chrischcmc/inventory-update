@@ -1,3 +1,11 @@
+// Connect to backend Socket.IO
+const socket = io('https://inventory-update.onrender.com');
+
+// Listen for real-time stock updates
+socket.on('stockUpdate', (newBalance) => {
+  document.getElementById('msg').innerText = `Balance updated: ${newBalance}`;
+});
+
 async function purchase() {
   const qty = document.getElementById('qty').value;
   const res = await fetch('/purchase', {
