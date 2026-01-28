@@ -5,7 +5,13 @@ require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: '*', // or specify your frontend URL if deployed separately
+    methods: ['GET', 'POST']
+  }
+});
+
 
 app.use(express.json());
 
