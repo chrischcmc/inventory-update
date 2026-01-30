@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Purchase Item</title>
   <style>
-    /* Base container */
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -48,11 +47,14 @@
       background: #fff;
       padding: 1rem;
       border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
 
     .form-group {
       margin-bottom: 1rem;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .form-label {
@@ -64,6 +66,7 @@
     .form-input,
     .form-select {
       width: 100%;
+      box-sizing: border-box;
       padding: 0.75rem;
       font-size: 1rem;
       border: 1px solid #ccc;
@@ -89,15 +92,24 @@
       margin-top: 1rem;
       font-size: 0.95rem;
       display: none;
+      text-align: center;
     }
 
     .message.show {
       display: block;
     }
 
-    .message-success { color: green; }
-    .message-error { color: red; }
-    .message-loading { color: #0078d7; }
+    .message-success {
+      color: green;
+    }
+
+    .message-error {
+      color: red;
+    }
+
+    .message-loading {
+      color: #0078d7;
+    }
 
     footer {
       text-align: center;
@@ -106,14 +118,15 @@
       color: #777;
     }
 
-    /* Responsive adjustments */
     @media (max-width: 600px) {
       .title {
         font-size: 1.2rem;
       }
+
       .form-wrapper {
         padding: 0.75rem;
       }
+
       .purchase-btn {
         font-size: 0.95rem;
       }
@@ -130,7 +143,7 @@
       </div>
     </header>
 
-    <main class="main-content">
+    <main>
       <div class="form-wrapper">
         <div class="form-group">
           <label for="product" class="form-label">Select Product</label>
@@ -141,12 +154,12 @@
 
         <div class="form-group">
           <label for="qty" class="form-label">Quantity</label>
-          <input type="number" id="qty" placeholder="Enter quantity" class="form-input" min="1">
+          <input type="number" id="qty" placeholder="Enter quantity" class="form-input" min="1" />
         </div>
 
-        <button onclick="purchase()" class="purchase-btn">
-          Complete Purchase →
-        </button>
+        <div class="form-group">
+          <button onclick="purchase()" class="purchase-btn">Complete Purchase →</button>
+        </div>
 
         <div id="msg" class="message"></div>
       </div>
@@ -158,14 +171,13 @@
   </div>
 
   <script>
-    // Load product list from backend
     async function loadProducts() {
       try {
         const res = await fetch('/stock');
         const data = await res.json();
         if (data.success) {
           const select = document.getElementById('product');
-          select.innerHTML = ''; // clear placeholder
+          select.innerHTML = '';
           data.stock.forEach(item => {
             const option = document.createElement('option');
             option.value = item.item_name;
@@ -216,7 +228,7 @@
       }
     }
 
-    document.getElementById('qty').addEventListener('keypress', function(e) {
+    document.getElementById('qty').addEventListener('keypress', function (e) {
       if (e.key === 'Enter') {
         purchase();
       }
