@@ -51,7 +51,18 @@ body {
   animation: grain 8s steps(10) infinite;
 }
 
-@keyframes grain { 0%,100%{transform:translate(0,0);} 10%{transform:translate(-5%,-10%);} 20%{transform:translate(-15%,5%);} 30%{transform:translate(7%,-25%);} 40%{transform:translate(-5%,25%);} 50%{transform:translate(-15%,10%);} 60%{transform:translate(15%,0%);} 70%{transform:translate(0%,15%);} 80%{transform:translate(3%,35%);} 90%{transform:translate(-10%,10%);} }
+@keyframes grain {
+  0%,100% { transform: translate(0,0); }
+  10% { transform: translate(-5%,-10%); }
+  20% { transform: translate(-15%,5%); }
+  30% { transform: translate(7%,-25%); }
+  40% { transform: translate(-5%,25%); }
+  50% { transform: translate(-15%,10%); }
+  60% { transform: translate(15%,0%); }
+  70% { transform: translate(0%,15%); }
+  80% { transform: translate(3%,35%); }
+  90% { transform: translate(-10%,10%); }
+}
 
 .container {
   max-width: 1200px;
@@ -148,23 +159,15 @@ body {
 
 .inventory-table tbody tr {
   border-bottom: 1px solid var(--color-border);
-  transition: var(--transition-smooth);
+  position: relative;
+  padding-left: 4px; /* reserve space for accent bar */
+  transition: background 0.3s ease, transform 0.3s ease;
 }
 .inventory-table tbody tr:last-child { border-bottom: none; }
 
-/* Hover effect */
 .inventory-table tbody tr:hover {
   background: linear-gradient(90deg, rgba(212,165,116,0.05) 0%, rgba(212,165,116,0.02) 100%);
   transform: translateX(4px);
 }
 .inventory-table tbody tr:hover::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 4px;
-  background: var(--color-accent);
-  border-radius: 0 2px 2px 0;
-}
-
-/* Footer */
-.footer { margin
+  content
