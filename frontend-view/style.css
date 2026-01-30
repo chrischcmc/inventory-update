@@ -281,15 +281,23 @@ body {
   );
   border-bottom: 2px solid var(--color-accent);
   flex-shrink: 0;
+  display: block;
+  width: 100%;
 }
 
 .inventory-table tbody {
   display: block;
-  overflow-y: auto;
+  overflow-y: scroll;
   flex: 1;
+  width: 100%;
 }
 
-.inventory-table thead,
+.inventory-table thead tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
 .inventory-table tbody tr {
   display: table;
   width: 100%;
@@ -429,6 +437,31 @@ body {
 
 #stock:hover {
   transform: scale(1.05);
+}
+
+/* Custom scrollbar styling */
+.inventory-table tbody::-webkit-scrollbar {
+  width: 8px;
+}
+
+.inventory-table tbody::-webkit-scrollbar-track {
+  background: var(--color-bg);
+  border-radius: 4px;
+}
+
+.inventory-table tbody::-webkit-scrollbar-thumb {
+  background: var(--color-accent);
+  border-radius: 4px;
+}
+
+.inventory-table tbody::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-dark);
+}
+
+/* For Firefox */
+.inventory-table tbody {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-accent) var(--color-bg);
 }
 
 /* Responsive Design */
