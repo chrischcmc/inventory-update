@@ -4,22 +4,41 @@
   <title>Purchase Item</title>
 </head>
 <body>
-  <h1>Purchase Shoes</h1>
+  <h1>Purchase Item</h1>
+
+  <!-- Product selection -->
+  <label for="product">Select Product:</label>
+  <select id="product">
+    <option value="shoes">Shoes</option>
+    <option value="shirt">Shirt</option>
+    <option value="hat">Hat</option>
+  </select>
+
+  <!-- Quantity input -->
   <input type="number" id="qty" placeholder="Quantity">
+
   <button onclick="purchase()">Buy</button>
   <p id="msg"></p>
 
   <script>
     async function purchase() {
+      const product = document.getElementById('product').value;
       const qty = document.getElementById('qty').value;
+
       const res = await fetch('/purchase', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quantity: parseInt(qty) })
+        body: JSON.stringify({
+          product: product,
+          quantity: parseInt(qty)
+        })
       });
+
       const data = await res.json();
-      document.getElementById('msg').innerText = 
-        data.success ? `Purchase successful. Balance: ${data.balance}` : data.error;
+      document.getElementById('msg').innerText =
+        data.success
+          ? `Purchase successful. ${product} balance: ${data.balance}`
+          : data.error;
     }
   </script>
 </body>
