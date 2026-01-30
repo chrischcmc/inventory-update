@@ -7,12 +7,21 @@
 </head>
 <body>
   <h1>Inventory Balance</h1>
-  <p>Current Stock: <span id="balance">Loading...</span></p>
 
-  <!-- <button onclick="purchaseItem(1)">Buy 1</button>  -->
-  <!-- <button onclick="purchaseItem(2)">Buy 2</button>  -->
+  <!-- Inventory table -->
+  <table id="inventory">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="2">Loading...</td></tr>
+    </tbody>
+  </table>
 
-  <!-- Load Socket.IO client from backend -->
+  <!-- Load Socket.IO client -->
   <script src="/socket.io/socket.io.js"></script>
   <!-- Your frontend logic -->
   <script src="script.js"></script>
