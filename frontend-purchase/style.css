@@ -75,9 +75,13 @@ body {
 .container {
   max-width: 600px;
   margin: 0 auto;
-  padding: var(--spacing-2xl) var(--spacing-md);
+  padding: var(--spacing-md);
   position: relative;
   animation: fadeIn 0.8s ease-out;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 @keyframes fadeIn {
@@ -93,7 +97,7 @@ body {
 
 /* Header Styling */
 .header {
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
   position: relative;
   animation: slideDown 0.6s ease-out;
 }
@@ -214,7 +218,7 @@ body {
 .form-wrapper {
   background: var(--color-surface);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-xl);
+  padding: var(--spacing-lg);
   box-shadow: 
     0 1px 3px var(--color-shadow-light),
     0 10px 30px var(--color-shadow);
@@ -251,7 +255,7 @@ body {
 
 /* Form Elements */
 .form-group {
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
 }
 
 .form-label {
@@ -461,8 +465,8 @@ body {
 
 /* Footer */
 .footer {
-  margin-top: var(--spacing-2xl);
-  padding-top: var(--spacing-lg);
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-sm);
   text-align: center;
   animation: fadeIn 1s ease-out 0.6s backwards;
 }
@@ -485,21 +489,21 @@ body {
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {
-    padding: var(--spacing-lg) var(--spacing-sm);
+    padding: var(--spacing-sm);
   }
   
   .title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
   
   .header-content {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
   }
   
   .form-wrapper {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
   }
 }
 

@@ -2,24 +2,61 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inventory View</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Inventory Balance</h1>
+  <div class="grain-overlay"></div>
+  
+  <div class="container">
+    <header class="header">
+      <div class="header-content">
+        <h1 class="title">Inventory Balance</h1>
+        <div class="status-indicator">
+          <span class="status-dot"></span>
+          <span class="status-text">Live Updates</span>
+        </div>
+      </div>
+      <div class="header-decoration"></div>
+    </header>
 
-  <!-- Inventory table -->
-  <table id="inventory">
-    <thead>
-      <tr>
-        <th>Product</th>
-        <th>Balance</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td colspan="2">Loading...</td></tr>
-    </tbody>
-  </table>
+    <main class="main-content">
+      <div class="table-wrapper">
+        <table id="inventory" class="inventory-table">
+          <thead>
+            <tr>
+              <th>
+                <div class="th-content">
+                  <span>Product</span>
+                </div>
+              </th>
+              <th>
+                <div class="th-content">
+                  <span>Balance</span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="loading-row">
+              <td colspan="2">
+                <div class="loading-container">
+                  <div class="loading-spinner"></div>
+                  <span>Loading inventory data...</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-line"></div>
+      <p>Real-time inventory monitoring system</p>
+    </footer>
+  </div>
 
   <!-- Load Socket.IO client -->
   <script src="/socket.io/socket.io.js"></script>
