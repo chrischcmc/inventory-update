@@ -1,116 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Purchase Item</title>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="grain-overlay"></div>
-  
-  <div class="container">
-    <header class="header">
-      <div class="header-content">
-        <h1 class="title">Purchase Item</h1>
-        <div class="status-indicator">
-          <span class="status-dot"></span>
-          <span class="status-text">Ready</span>
-        </div>
-      </div>
-      <div class="header-decoration"></div>
-    </header>
-
-    <main class="main-content">
-      <div class="form-wrapper">
-        <div class="form-group">
-          <label for="product" class="form-label">Select Product</label>
-          <div class="select-wrapper">
-            <select id="product" class="form-select">
-              <option value="Shoes">Shoes</option>
-              <option value="Pants">Pants</option>
-              <option value="T-Shirts">T-Shirts</option>
-            </select>
-            <div class="select-arrow">
-              <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="qty" class="form-label">Quantity</label>
-          <input type="number" id="qty" placeholder="Enter quantity" class="form-input" min="1">
-        </div>
-
-        <button onclick="purchase()" class="purchase-btn">
-          <span class="btn-text">Complete Purchase</span>
-          <span class="btn-icon">→</span>
-        </button>
-
-        <div id="msg" class="message"></div>
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-line"></div>
-      <p>Secure checkout system</p>
-    </footer>
-  </div>
+  <h1>Purchase Shoes</h1>
+  <input type="number" id="qty" placeholder="Quantity">
+  <button onclick="purchase()">Buy</button>
+  <p id="msg"></p>
 
   <script>
     async function purchase() {
-      const product = document.getElementById('product').value;
       const qty = document.getElementById('qty').value;
-      const msgEl = document.getElementById('msg');
-
-      // Clear previous message
-      msgEl.className = 'message';
-      msgEl.innerText = '';
-
-      // Validate quantity
-      if (!qty || qty < 1) {
-        msgEl.className = 'message message-error show';
-        msgEl.innerText = 'Please enter a valid quantity';
-        return;
-      }
-
-      // Show loading state
-      msgEl.className = 'message message-loading show';
-      msgEl.innerText = 'Processing purchase...';
-
-      try {
-        const res = await fetch('/purchase', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            product: product,
-            quantity: parseInt(qty)
-          })
-        });
-
-        const data = await res.json();
-        
-        if (data.success) {
-          msgEl.className = 'message message-success show';
-          msgEl.innerText = `Purchase successful. ${product}`;
-        } else {
-          msgEl.className = 'message message-error show';
-          msgEl.innerText = data.error || 'Purchase failed';
-        }
-      } catch (error) {
-        msgEl.className = 'message message-error show';
-        msgEl.innerText = 'Network error. Please try again.';
-      }
+      const res = await fetch('/purchase', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity: parseInt(qty) })
+      });
+      const data = await res.json();
+      document.getElementById('msg').innerText = 
+        data.success ? `Purchase successful. Balance: ${data.balance}` : data.error;
     }
-
-    // Allow Enter key to submit
-    document.getElementById('qty').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        purchase();
-      }
-    });
   </script>
 </body>
 </html>
