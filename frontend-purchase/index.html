@@ -1,21 +1,45 @@
-<select id="product"></select>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Purchase Item</title>
+</head>
+<body>
+  <h1>Purchase Item</h1>
 
-<script>
-  async function loadProducts() {
-    const res = await fetch('/products');
-    const data = await res.json();
-    if (data.success) {
-      const select = document.getElementById('product');
-      data.products.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item;
-        option.textContent = item;
-        select.appendChild(option);
+  <!-- Product dropdown -->
+  <label for="product">Select Product:</label>
+  <select id="product">
+    <option value="Shoes">Shoes</option>
+    <option value="Pants">Pants</option>
+    <option value="T-Shirts">T-Shirts</option>
+  </select>
+
+  <!-- Quantity input -->
+  <input type="number" id="qty" placeholder="Quantity">
+
+  <button onclick="purchase()">Buy</button>
+  <p id="msg"></p>
+
+  <script>
+    async function purchase() {
+      const product = document.getElementById('product').value;
+      const qty = document.getElementById('qty').value;
+
+      const res = await fetch('/purchase', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          product: product,
+          quantity: parseInt(qty)
+        })
       });
-    } else {
-      document.getElementById('msg').innerText = 'Failed to load products';
-    }
-  }
 
-  loadProducts(); // Call on page load
-</script>
+      const data = await res.json();
+      document.getElementById('msg').innerText =
+        data.success
+          ? `Purchase successful. ${product} balance: ${data.balance}`
+          : data.error;
+    }
+  </script>
+</body>
+</html>
