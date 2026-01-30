@@ -1,15 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../db');
+const { Pool } = require('pg');
 
-// Stock endpoint
+const db = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
+
+// GET all products with balances
 router.get('/', async (req, res) => {
   try {
-    const result = await pool.query('SELECT balance FROM stock WHERE id = 1');
-    res.json({ balance: result.rows[0].balance });
+    const result = await db.query('SELECT item_name, balance FROM stock ORDER BY id');
+    res.json({ success: true, stock: result.rows });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Database error' });
+    console.error('Error fetching stock:', err);
+    res.status(500).json({ success: false, error: 'Failed to load stock' });
   }
 });
 
