@@ -4,38 +4,139 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Purchase Item</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Base container */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .title {
+      font-size: 1.5rem;
+      margin: 0.5rem 0;
+    }
+
+    .status-indicator {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      background: green;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+
+    .form-wrapper {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    .form-input,
+    .form-select {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .purchase-btn {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      background: #0078d7;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .purchase-btn:hover {
+      background: #005fa3;
+    }
+
+    .message {
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message-success { color: green; }
+    .message-error { color: red; }
+    .message-loading { color: #0078d7; }
+
+    footer {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: #777;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .title {
+        font-size: 1.2rem;
+      }
+      .form-wrapper {
+        padding: 0.75rem;
+      }
+      .purchase-btn {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="grain-overlay"></div>
-  
   <div class="container">
-    <header class="header">
-      <div class="header-content">
-        <h1 class="title">Purchase Item</h1>
-        <div class="status-indicator">
-          <span class="status-dot"></span>
-          <span class="status-text">Ready</span>
-        </div>
+    <header>
+      <h1 class="title">Purchase Item</h1>
+      <div class="status-indicator">
+        <span class="status-dot"></span>
+        <span class="status-text">Ready</span>
       </div>
-      <div class="header-decoration"></div>
     </header>
 
     <main class="main-content">
       <div class="form-wrapper">
         <div class="form-group">
           <label for="product" class="form-label">Select Product</label>
-          <div class="select-wrapper">
-            <!-- Dropdown will be populated dynamically -->
-            <select id="product" class="form-select">
-              <option disabled selected>Loading products...</option>
-            </select>
-            <div class="select-arrow">
-              <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </div>
+          <select id="product" class="form-select">
+            <option disabled selected>Loading products...</option>
+          </select>
         </div>
 
         <div class="form-group">
@@ -44,16 +145,14 @@
         </div>
 
         <button onclick="purchase()" class="purchase-btn">
-          <span class="btn-text">Complete Purchase</span>
-          <span class="btn-icon">→</span>
+          Complete Purchase →
         </button>
 
         <div id="msg" class="message"></div>
       </div>
     </main>
 
-    <footer class="footer">
-      <div class="footer-line"></div>
+    <footer>
       <p>Secure checkout system</p>
     </footer>
   </div>
@@ -73,8 +172,6 @@
             option.textContent = item.item_name;
             select.appendChild(option);
           });
-        } else {
-          console.error('Failed to load products:', data.error);
         }
       } catch (err) {
         console.error('Error loading products:', err);
@@ -86,18 +183,15 @@
       const qty = document.getElementById('qty').value;
       const msgEl = document.getElementById('msg');
 
-      // Clear previous message
       msgEl.className = 'message';
       msgEl.innerText = '';
 
-      // Validate quantity
       if (!qty || qty < 1) {
         msgEl.className = 'message message-error show';
         msgEl.innerText = 'Please enter a valid quantity';
         return;
       }
 
-      // Show loading state
       msgEl.className = 'message message-loading show';
       msgEl.innerText = 'Processing purchase...';
 
@@ -105,14 +199,10 @@
         const res = await fetch('/purchase', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            product: product,
-            quantity: parseInt(qty)
-          })
+          body: JSON.stringify({ product, quantity: parseInt(qty) })
         });
 
         const data = await res.json();
-        
         if (data.success) {
           msgEl.className = 'message message-success show';
           msgEl.innerText = `Purchase successful. ${product}`;
@@ -126,14 +216,12 @@
       }
     }
 
-    // Allow Enter key to submit
     document.getElementById('qty').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
         purchase();
       }
     });
 
-    // Load products on page load
     window.onload = loadProducts;
   </script>
 </body>
