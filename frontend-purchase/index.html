@@ -1,66 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inventory View</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Purchase Item</title>
 </head>
 <body>
-  <div class="grain-overlay"></div>
-  
-  <div class="container">
-    <header class="header">
-      <div class="header-content">
-        <h1 class="title">Inventory Balance</h1>
-        <div class="status-indicator">
-          <span class="status-dot"></span>
-          <span class="status-text">Live Updates</span>
-        </div>
-      </div>
-      <div class="header-decoration"></div>
-    </header>
+  <h1>Purchase Item</h1>
 
-    <main class="main-content">
-      <div class="table-wrapper">
-        <table id="inventory" class="inventory-table">
-          <thead>
-            <tr>
-              <th>
-                <div class="th-content">
-                  <span>Product</span>
-                </div>
-              </th>
-              <th>
-                <div class="th-content">
-                  <span>Balance</span>
-                </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="loading-row">
-              <td colspan="2">
-                <div class="loading-container">
-                  <div class="loading-spinner"></div>
-                  <span>Loading inventory data...</span>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </main>
+  <!-- Product dropdown -->
+  <label for="product">Select Product:</label>
+  <select id="product">
+    <option value="Shoes">Shoes</option>
+    <option value="Pants">Pants</option>
+    <option value="T-Shirts">T-Shirts</option>
+  </select>
 
-    <footer class="footer">
-      <div class="footer-line"></div>
-      <p>Real-time inventory monitoring system</p>
-    </footer>
-  </div>
+  <!-- Quantity input -->
+  <input type="number" id="qty" placeholder="Quantity">
 
-  <!-- Load Socket.IO client -->
-  <script src="/socket.io/socket.io.js"></script>
-  <!-- Your frontend logic -->
-  <script src="script.js"></script>
+  <button onclick="purchase()">Buy</button>
+  <p id="msg"></p>
+
+  <script>
+    async function purchase() {
+      const product = document.getElementById('product').value;
+      const qty = document.getElementById('qty').value;
+
+      const res = await fetch('/purchase', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          product: product,
+          quantity: parseInt(qty)
+        })
+      });
+
+      const data = await res.json();
+      document.getElementById('msg').innerText =
+        data.success
+          <!--  ? `Purchase successful. ${product} balance: ${data.balance}`  -->
+          ? `Purchase successful. ${product}`
+          : data.error;
+    }
+  </script>
 </body>
 </html>
