@@ -26,10 +26,9 @@
         <div class="form-group">
           <label for="product" class="form-label">Select Product</label>
           <div class="select-wrapper">
+            <!-- Dropdown will be populated dynamically -->
             <select id="product" class="form-select">
-              <option value="Shoes">Shoes</option>
-              <option value="Pants">Pants</option>
-              <option value="T-Shirts">T-Shirts</option>
+              <option disabled selected>Loading products...</option>
             </select>
             <div class="select-arrow">
               <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
@@ -60,6 +59,28 @@
   </div>
 
   <script>
+    // Load product list from backend
+    async function loadProducts() {
+      try {
+        const res = await fetch('/stock');
+        const data = await res.json();
+        if (data.success) {
+          const select = document.getElementById('product');
+          select.innerHTML = ''; // clear placeholder
+          data.stock.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.item_name;
+            option.textContent = item.item_name;
+            select.appendChild(option);
+          });
+        } else {
+          console.error('Failed to load products:', data.error);
+        }
+      } catch (err) {
+        console.error('Error loading products:', err);
+      }
+    }
+
     async function purchase() {
       const product = document.getElementById('product').value;
       const qty = document.getElementById('qty').value;
@@ -111,6 +132,9 @@
         purchase();
       }
     });
+
+    // Load products on page load
+    window.onload = loadProducts;
   </script>
 </body>
 </html>
