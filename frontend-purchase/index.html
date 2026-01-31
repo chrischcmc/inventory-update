@@ -337,6 +337,7 @@
           select.innerHTML = '';
 	  // Add a placeholder option that stays selected 
 	  const placeholder = document.createElement('option'); 
+	  placeholder.value = ""; // empty value
 	  placeholder.textContent = 'Select a product...'; 
 	  placeholder.disabled = true; placeholder.selected = true; 
 	  select.appendChild(placeholder);
@@ -386,6 +387,9 @@
         if (data.success) {
           msgEl.className = 'message message-success show';
           msgEl.innerText = `Purchase successful. ${product}`;
+	  // Reset form fields after success 
+	  productSelect.selectedIndex = 0; // back to placeholder 
+	  qtyInput.value = '';
         } else {
           msgEl.className = 'message message-error show';
           msgEl.innerText = data.error || 'Purchase failed';
