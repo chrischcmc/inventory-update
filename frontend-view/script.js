@@ -24,7 +24,7 @@ function loadStock() {
 
 // Listen for real-time stock updates from backend
 socket.on('stockUpdate', (update) => {
-  console.log('Received update:', update);
+  console.log('✅ Received stockUpdate:', update);
 
   const productName = update.item_name || update.product;
   const balance = update.balance || 0;
@@ -32,7 +32,14 @@ socket.on('stockUpdate', (update) => {
   const row = document.getElementById(`item-${productName}`);
   if (row) {
     row.innerHTML = `<td>${productName}</td><td>${balance}</td>`;
+  } else {
+    console.warn(`⚠️ No row found for product: ${productName}`);
   }
+});
+
+// Debug: log all incoming socket events
+socket.onAny((event, payload) => {
+  console.log(`🔍 Received socket event: ${event}`, payload);
 });
 
 // Load stock balances on page load
