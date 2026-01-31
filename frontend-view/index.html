@@ -90,6 +90,21 @@
       `).join('');
     }
 
+    // Fetch inventory on page load (Option B)
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch('https://inventory-update.onrender.com/stock')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            console.log('📦 Initial stock data:', data.stock);
+            updateInventory(data.stock);
+          } else {
+            console.error('❌ Failed to load stock:', data.error);
+          }
+        })
+        .catch(err => console.error('❌ Error fetching stock:', err));
+    });
+
     // Update only the affected row when stockUpdate arrives
     socket.on('stockUpdate', (update) => {
       console.log('✅ Received stockUpdate:', update);
@@ -119,18 +134,6 @@
         `;
         tbody.appendChild(newRow);
       }
-    });
-
-    // Handle initial inventory data
-    socket.on('initial_inventory', (data) => {
-      console.log('📦 Received initial_inventory:', data);
-      updateInventory(data);
-    });
-
-    // Initial load
-    socket.on('connect', () => {
-      console.log('Connected to server');
-      socket.emit('request_inventory');
     });
 
     // Handle errors
