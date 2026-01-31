@@ -335,6 +335,11 @@
         if (data.success) {
           const select = document.getElementById('product');
           select.innerHTML = '';
+	  // Add a placeholder option that stays selected 
+	  const placeholder = document.createElement('option'); 
+	  placeholder.textContent = 'Select a product...'; 
+	  placeholder.disabled = true; placeholder.selected = true; 
+	  select.appendChild(placeholder);
           data.stock.forEach(item => {
             const option = document.createElement('option');
             option.value = item.item_name;
