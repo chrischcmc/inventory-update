@@ -24,9 +24,15 @@ function loadStock() {
 
 // Listen for real-time stock updates from backend
 socket.on('stockUpdate', (update) => {
-  const row = document.getElementById(`item-${update.product}`);
+  console.log('Received update:', update);
+
+  // Use item_name if available, otherwise fallback to product
+  const productName = update.item_name || update.product;
+  const balance = update.balance || 0;
+
+  const row = document.getElementById(`item-${productName}`);
   if (row) {
-    row.innerHTML = `<td>${update.product}</td><td>${update.balance}</td>`;
+    row.innerHTML = `<td>${productName}</td><td>${balance}</td>`;
   }
 });
 
