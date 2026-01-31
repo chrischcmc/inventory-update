@@ -395,8 +395,7 @@
       const data = await res.json();
       if (data.success) {
         msgEl.className = 'message message-success show';
-        msgEl.innerText = `Purchase successful. ${product}`;
-        // ✅ Do NOT reset here — form stays filled until next click
+	msgEl.innerText = `Purchase successful. Item: ${product}, Quantity = ${qty}`;
       } else {
         msgEl.className = 'message message-error show';
         msgEl.innerText = data.error || 'Purchase failed';
@@ -419,6 +418,18 @@
   });
 
   window.onload = loadProducts;
+document.getElementById('product').addEventListener('change', () => {
+  const msgEl = document.getElementById('msg');
+  msgEl.className = 'message';
+  msgEl.innerText = '';
+});
+
+document.getElementById('qty').addEventListener('input', () => {
+  const msgEl = document.getElementById('msg');
+  msgEl.className = 'message';
+  msgEl.innerText = '';
+});
+
 </script>
 
 </body>
