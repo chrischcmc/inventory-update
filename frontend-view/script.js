@@ -26,7 +26,6 @@ function loadStock() {
 socket.on('stockUpdate', (update) => {
   console.log('Received update:', update);
 
-  // Use item_name if available, otherwise fallback to product
   const productName = update.item_name || update.product;
   const balance = update.balance || 0;
 
