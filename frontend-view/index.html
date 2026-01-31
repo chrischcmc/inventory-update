@@ -333,83 +333,71 @@
   <script src="/socket.io/socket.io.js"></script>
   
   <script>
-    // Check if Socket.IO is available
-    if (typeof io === 'undefined') {
-      console.error('Socket.IO library not loaded. Please ensure the server is running.');
-      document.querySelector('#inventory tbody').innerHTML = `
-        <tr>
-          <td colspan="2" style="text-align: center; padding: 2rem; color: #991b1b;">
-            Unable to connect. Please ensure the server is running.
-          </td>
-        </tr>
-      `;
-    } else {
-      // Connect to Socket.IO
-      const socket = io();
+    // Connect to Socket.IO
+    const socket = io();
 
-      // Helper function to get balance badge class
-      function getBalanceBadgeClass(balance) {
-        if (balance >= 50) return 'balance-high';
-        if (balance >= 20) return 'balance-medium';
-        return 'balance-low';
-      }
+    // Helper function to get balance badge class
+    function getBalanceBadgeClass(balance) {
+      if (balance >= 50) return 'balance-high';
+      if (balance >= 20) return 'balance-medium';
+      return 'balance-low';
+    }
 
-      // Update inventory table
-      function updateInventory(data) {
-        const tbody = document.querySelector('#inventory tbody');
-        
-        if (!data || data.length === 0) {
-          tbody.innerHTML = `
-            <tr>
-              <td colspan="2" style="text-align: center; padding: 2rem; color: #6b7280;">
-                No inventory data available
-              </td>
-            </tr>
-          `;
-          return;
-        }
-
-        tbody.innerHTML = data.map(item => `
-          <tr>
-            <td>${item.item_name || item.product || 'Unknown'}</td>
-            <td>
-              <span class="balance-badge ${getBalanceBadgeClass(item.balance || item.quantity || 0)}">
-                ${item.balance || item.quantity || 0} units
-              </span>
-            </td>
-          </tr>
-        `).join('');
-      }
-
-      // Listen for inventory updates
-      socket.on('inventory_update', (data) => {
-        updateInventory(data);
-      });
-
-      // Initial load
-      socket.on('connect', () => {
-        console.log('Connected to server');
-        socket.emit('request_inventory');
-      });
-
-      // Handle initial inventory data
-      socket.on('initial_inventory', (data) => {
-        updateInventory(data);
-      });
-
-      // Handle errors
-      socket.on('connect_error', (error) => {
-        console.error('Connection error:', error);
-        const tbody = document.querySelector('#inventory tbody');
+    // Update inventory table
+    function updateInventory(data) {
+      const tbody = document.querySelector('#inventory tbody');
+      
+      if (!data || data.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="2" style="text-align: center; padding: 2rem; color: #991b1b;">
-              Connection error. Please refresh the page.
+            <td colspan="2" style="text-align: center; padding: 2rem; color: #6b7280;">
+              No inventory data available
             </td>
           </tr>
         `;
-      });
+        return;
+      }
+
+      tbody.innerHTML = data.map(item => `
+        <tr>
+          <td>${item.item_name || item.product || 'Unknown'}</td>
+          <td>
+            <span class="balance-badge ${getBalanceBadgeClass(item.balance || item.quantity || 0)}">
+              ${item.balance || item.quantity || 0} units
+            </span>
+          </td>
+        </tr>
+      `).join('');
     }
+
+    // Listen for inventory updates
+    socket.on('inventory_update', (data) => {
+      updateInventory(data);
+    });
+
+    // Initial load
+    socket.on('connect', () => {
+      console.log('Connected to server');
+      socket.emit('request_inventory');
+    });
+
+    // Handle initial inventory data
+    socket.on('initial_inventory', (data) => {
+      updateInventory(data);
+    });
+
+    // Handle errors
+    socket.on('connect_error', (error) => {
+      console.error('Connection error:', error);
+      const tbody = document.querySelector('#inventory tbody');
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="2" style="text-align: center; padding: 2rem; color: #991b1b;">
+            Connection error. Please refresh the page.
+          </td>
+        </tr>
+      `;
+    });
   </script>
 </body>
 </html>
