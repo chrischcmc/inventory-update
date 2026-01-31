@@ -336,7 +336,7 @@
         const select = document.getElementById('product');
         select.innerHTML = '';
 
-        // ✅ Add placeholder with empty value
+        // Add placeholder with empty value
         const placeholder = document.createElement('option');
         placeholder.value = "";
         placeholder.textContent = "Select a product...";
@@ -344,7 +344,9 @@
         placeholder.selected = true;
         select.appendChild(placeholder);
 
-        // Append products
+	data.stock.sort((a, b) => a.item_name.localeCompare(b.item_name));
+
+        // Append products in sorted order
         data.stock.forEach(item => {
           const option = document.createElement('option');
           option.value = item.item_name;
