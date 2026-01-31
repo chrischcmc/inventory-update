@@ -360,6 +360,12 @@
       msgEl.className = 'message';
       msgEl.innerText = '';
 
+      // New validation for product selection 
+      if (!product) { 
+	msgEl.className = 'message message-error show'; 
+	msgEl.innerText = 'Please select a product'; 
+	return; }
+
       if (!qty || qty < 1) {
         msgEl.className = 'message message-error show';
         msgEl.innerText = 'Please enter a valid quantity';
