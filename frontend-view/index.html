@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inventory View</title>
   <style>
-    /* (your existing CSS unchanged) */
+    /* keep all your existing CSS here unchanged */
   </style>
 </head>
 <body>
@@ -63,7 +63,7 @@
       return 'balance-low';
     }
 
-    // Update inventory table
+    // Render full inventory table
     function updateInventory(data) {
       const tbody = document.querySelector('#inventory tbody');
       
@@ -90,11 +90,35 @@
       `).join('');
     }
 
-    // Listen for real-time stock updates (backend emits 'stockUpdate')
+    // Update only the affected row when stockUpdate arrives
     socket.on('stockUpdate', (update) => {
       console.log('✅ Received stockUpdate:', update);
-      // Wrap single update in array so updateInventory works
-      updateInventory([update]);
+
+      const productName = update.item_name || update.product;
+      const balance = update.balance || 0;
+
+      const row = document.getElementById(`item-${productName}`);
+      if (row) {
+        row.querySelector('td:nth-child(2)').innerHTML = `
+          <span class="balance-badge ${getBalanceBadgeClass(balance)}">
+            ${balance} units
+          </span>
+        `;
+      } else {
+        console.warn(`⚠️ No row found for ${productName}, creating new row`);
+        const tbody = document.querySelector('#inventory tbody');
+        const newRow = document.createElement('tr');
+        newRow.id = `item-${productName}`;
+        newRow.innerHTML = `
+          <td>${productName}</td>
+          <td>
+            <span class="balance-badge ${getBalanceBadgeClass(balance)}">
+              ${balance} units
+            </span>
+          </td>
+        `;
+        tbody.appendChild(newRow);
+      }
     });
 
     // Handle initial inventory data
