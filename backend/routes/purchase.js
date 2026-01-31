@@ -11,8 +11,10 @@ const db = new Pool({
 
 router.post('/', async (req, res) => {
   const { product, quantity } = req.body;
+  console.log('🛒 Incoming purchase request:', { product, quantity });
 
   if (!product || !quantity || quantity <= 0) {
+    console.log('❌ Invalid purchase request');
     return res.json({ success: false, error: 'Invalid product or quantity' });
   }
 
@@ -22,8 +24,10 @@ router.post('/', async (req, res) => {
       'SELECT balance FROM stock WHERE item_name = $1',
       [product]
     );
+    console.log('📦 Current balance fetched:', result.rows);
 
     if (result.rows.length === 0) {
+      console.log('❌ Product not found:', product);
       return res.json({ success: false, error: 'Product not found' });
     }
 
@@ -31,6 +35,7 @@ router.post('/', async (req, res) => {
 
     // 2. Check if enough stock
     if (currentBalance < quantity) {
+      console.log('⚠️ Insufficient stock for', product);
       return res.json({ success: false, error: 'Insufficient stock' });
     }
 
@@ -40,14 +45,17 @@ router.post('/', async (req, res) => {
       'UPDATE stock SET balance = $1 WHERE item_name = $2',
       [newBalance, product]
     );
+    console.log('✅ Balance updated:', { product, newBalance });
 
-    // 4. Emit real-time update
-    io.emit('stockUpdate', { product, balance: newBalance });
+    // 4. Emit real-time update (use item_name to match frontend row IDs)
+    const updatePayload = { item_name: product, balance: newBalance };
+    io.emit('stockUpdate', updatePayload);
+    console.log('📡 Emitted stockUpdate:', updatePayload);
 
     // 5. Respond to client
     res.json({ success: true, balance: newBalance });
   } catch (err) {
-    console.error('Purchase error:', err);
+    console.error('❌ Purchase error:', err);
     res.status(500).json({ success: false, error: 'Server error' });
   }
 });
