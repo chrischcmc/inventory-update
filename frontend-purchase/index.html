@@ -397,7 +397,7 @@
     const data = await res.json();
     if (data.success) {
       msgEl.className = 'message message-success show';
-      msgEl.innerText = `Purchase successful. Item: ${product}, Quantity = ${qty}`;
+      msgEl.innerText = `Purchase successful. Item: ${product}, Quantity: ${qty}`;
 
       // ✅ Reset fields only on success
       productSelect.selectedIndex = 0;
