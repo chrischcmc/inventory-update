@@ -360,66 +360,68 @@
   }
 
   async function purchase() {
-    const productSelect = document.getElementById('product');
-    const qtyInput = document.getElementById('qty');
-    const msgEl = document.getElementById('msg');
+  const productSelect = document.getElementById('product');
+  const qtyInput = document.getElementById('qty');
+  const msgEl = document.getElementById('msg');
 
-    // ✅ Clear form fields at the start of a new purchase attempt
-    msgEl.className = 'message';
-    msgEl.innerText = '';
+  // ✅ Clear message area at the start of a new attempt
+  msgEl.className = 'message';
+  msgEl.innerText = '';
 
-    const product = productSelect.value;
-    const qty = qtyInput.value;
+  const product = productSelect.value;
+  const qty = qtyInput.value;
 
-    // Validation
-    if (!product) {
-      msgEl.className = 'message message-error show';
-      msgEl.innerText = 'Please select a product';
-      return;
-    }
-
-    if (!qty || qty < 1) {
-      msgEl.className = 'message message-error show';
-      msgEl.innerText = 'Please enter a valid quantity';
-      return;
-    }
-
-    msgEl.className = 'message message-loading show';
-    msgEl.innerText = 'Processing purchase...';
-
-    try {
-      const res = await fetch('/purchase', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ product, quantity: parseInt(qty) })
-      });
-
-      const data = await res.json();
-      if (data.success) {
-        msgEl.className = 'message message-success show';
-	msgEl.innerText = `Purchase successful. Item: ${product}, Quantity = ${qty}`;
-      } else {
-        msgEl.className = 'message message-error show';
-        msgEl.innerText = data.error || 'Purchase failed';
-      }
-    } catch (error) {
-      msgEl.className = 'message message-error show';
-      msgEl.innerText = 'Network error. Please try again.';
-    }
-
-    // ✅ Reset fields only when user clicks again
-    productSelect.selectedIndex = 0;
-    qtyInput.value = '';
+  // Validation
+  if (!product) {
+    msgEl.className = 'message message-error show';
+    msgEl.innerText = 'Please select a product';
+    return;
   }
 
-  // Allow pressing Enter in qty field to trigger purchase
-  document.getElementById('qty').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-      purchase();
-    }
-  });
+  if (!qty || qty < 1) {
+    msgEl.className = 'message message-error show';
+    msgEl.innerText = 'Please enter a valid quantity';
+    return;
+  }
 
-  window.onload = loadProducts;
+  msgEl.className = 'message message-loading show';
+  msgEl.innerText = 'Processing purchase...';
+
+  try {
+    const res = await fetch('/purchase', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ product, quantity: parseInt(qty) })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      msgEl.className = 'message message-success show';
+      msgEl.innerText = `Purchase successful. Item: ${product}, Quantity = ${qty}`;
+
+      // ✅ Reset fields only on success
+      productSelect.selectedIndex = 0;
+      qtyInput.value = '';
+    } else {
+      msgEl.className = 'message message-error show';
+      msgEl.innerText = data.error || 'Purchase failed';
+      // ❌ Do not reset fields here — keep user input visible
+    }
+  } catch (error) {
+    msgEl.className = 'message message-error show';
+    msgEl.innerText = 'Network error. Please try again.';
+    // ❌ Do not reset fields here either
+  }
+}
+
+// Allow pressing Enter in qty field to trigger purchase
+document.getElementById('qty').addEventListener('keypress', function (e) {
+  if (e.key === 'Enter') {
+    purchase();
+  }
+});
+
+window.onload = loadProducts;
 document.getElementById('product').addEventListener('change', () => {
   const msgEl = document.getElementById('msg');
   msgEl.className = 'message';
